@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skills — Cecilia Battinelli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0b0f;
+      --bg-surface: #111118;
+      --bg-card: #13131c;
+      --border: rgba(160, 130, 255, 0.12);
+      --border-hover: rgba(160, 130, 255, 0.3);
+      --purple: #a78bfa;
+      --purple-dim: #7c5dc7;
+      --purple-glow: rgba(167, 139, 250, 0.15);
+      --text: #e8e4f0;
+      --text-secondary: #9490a8;
+      --text-tertiary: #5a5668;
+      --mono: 'DM Mono', monospace;
+      --serif: 'Instrument Serif', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(160,130,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(160,130,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124, 93, 199, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(11,11,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--purple);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--purple); }
+    .nav-links a.active { color: var(--purple); }
+
+    /* PAGE HEADER */
+    .page-header {
+      padding: 120px 0 64px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.1s;
+    }
+    .page-title {
+      font-family: var(--serif);
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 400;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.2s;
+    }
+    .page-title em {
+      font-style: italic;
+      color: var(--purple);
+    }
+    .page-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      line-height: 1.8;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.3s;
+    }
+
+    /* SKILL BLOCKS */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+
+    .skill-block {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .skill-block:nth-child(odd) {
+      padding-right: 3rem;
+      border-right: 1px solid var(--border);
+    }
+    .skill-block:nth-child(even) {
+      padding-left: 3rem;
+    }
+    /* Last row — remove bottom border */
+    .skill-block:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+
+    .skill-block-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .skill-block-num {
+      font-size: 10px;
+      color: var(--purple-dim);
+      letter-spacing: 0.1em;
+      min-width: 20px;
+    }
+    .skill-block-title {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    .skill-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .skill-item {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(160, 130, 255, 0.06);
+    }
+    .skill-item:last-child { border-bottom: none; }
+
+    .skill-name {
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 300;
+    }
+    .skill-context {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-align: right;
+      letter-spacing: 0.03em;
+    }
+
+    /* Hover row highlight */
+    .skill-item:hover .skill-name { color: var(--purple); }
+    .skill-item { transition: padding-left 0.15s; }
+    .skill-item:hover { padding-left: 6px; }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      margin-top: 0;
+    }
+    footer .wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer p { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.06em; }
+    footer a { color: var(--text-tertiary); text-decoration: none; }
+    footer a:hover { color: var(--purple); }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 640px) {
+      .skills-grid { grid-template-columns: 1fr; }
+      .skill-block:nth-child(odd) { padding-right: 0; border-right: none; }
+      .skill-block:nth-child(even) { padding-left: 0; }
+      .skill-block:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+      .skill-block:last-child { border-bottom: none; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="wrapper">
+    <a class="nav-logo" href="index.html">Cecilia Battinelli</a>
+    <ul class="nav-links">
+      <li><a href="index.html#experience">Experience</a></li>
+      <li><a href="index.html#speaking">Speaking</a></li>
+      <li><a href="index.html#education">Education</a></li>
+      <li><a href="skills.html" class="active">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="wrapper">
+
+    <div class="page-header">
+      <div class="page-eyebrow">Cecilia Battinelli</div>
+      <h1 class="page-title">Skills &<br><em>Expertise</em></h1>
+      <p class="page-desc">
+        Seven years across fintech and medtech, from research engineering to tech leadership and AI strategy. A mix of technical depth, domain fluency, and the ability to work across the full stack of an organization.
+      </p>
+    </div>
+
+    <div class="skills-grid">
+
+      <!-- AI & ML -->
+      <div class="skill-block reveal">
+        <div class="skill-block-header">
+          <span class="skill-block-num">01</span>
+          <span class="skill-block-title">AI & Machine Learning</span>
+        </div>
+        <ul class="skill-list">
+          <li class="skill-item">
+            <span class="skill-name">Generative AI solutions</span>
+            <span class="skill-context">SimCorp, strategy & prototyping</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">AI learning design</span>
+            <span class="skill-context">700+ people upskilling</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">LLM tooling & evaluation</span>
+            <span class="skill-context">Emerging tools assessment</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">GitHub Copilot</span>
+            <span class="skill-context">Workshops, adoption strategy</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">ML-driven automation</span>
+            <span class="skill-context">Error log classification, QA agents</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Mathematical optimization</span>
+            <span class="skill-context">Radiation therapy, research</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- TECHNICAL -->
+      <div class="skill-block reveal">
+        <div class="skill-block-header">
+          <span class="skill-block-num">02</span>
+          <span class="skill-block-title">Technical</span>
+        </div>
+        <ul class="skill-list">
+          <li class="skill-item">
+            <span class="skill-name">C++ / C#</span>
+            <span class="skill-context">Financial instruments, medtech</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Python</span>
+            <span class="skill-context">Automation, scripting, ML</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Git / GitHub</span>
+            <span class="skill-context">Technical ambassador, 20+ engineers</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">CI/CD pipelines</span>
+            <span class="skill-context">45+ person department lead</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">REST / external API integration</span>
+            <span class="skill-context">Pricing library integrations</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Algorithm development</span>
+            <span class="skill-context">Patents, publications</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- DOMAIN -->
+      <div class="skill-block reveal">
+        <div class="skill-block-header">
+          <span class="skill-block-num">03</span>
+          <span class="skill-block-title">Domain Knowledge</span>
+        </div>
+        <ul class="skill-list">
+          <li class="skill-item">
+            <span class="skill-name">Fintech / financial instruments</span>
+            <span class="skill-context">Pricing, SimCorp platform</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Regulated software development</span>
+            <span class="skill-context">Fintech & medtech compliance</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Radiation therapy software</span>
+            <span class="skill-context">RaySearch · proton arc delivery</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Clinical software requirements</span>
+            <span class="skill-context">Regulatory alignment, PO role</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Research & publication</span>
+            <span class="skill-context">3+ papers, ASTRO, ESTRO, PTCOG</span>
+          </li>
+        </ul>
+      </div>
+
+      <!-- LEADERSHIP -->
+      <div class="skill-block reveal">
+        <div class="skill-block-header">
+          <span class="skill-block-num">04</span>
+          <span class="skill-block-title">Leadership & Process</span>
+        </div>
+        <ul class="skill-list">
+          <li class="skill-item">
+            <span class="skill-name">Technical leadership</span>
+            <span class="skill-context">Tech Lead, cross-team delivery</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Product ownership</span>
+            <span class="skill-context">Scrum, stakeholder alignment</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Agile / Scrum</span>
+            <span class="skill-context">Certified Scrum Master</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Stakeholder management</span>
+            <span class="skill-context">C-level to engineering</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Mentoring</span>
+            <span class="skill-context">Junior engineers, thesis students</span>
+          </li>
+          <li class="skill-item">
+            <span class="skill-name">Public speaking</span>
+            <span class="skill-context">TechWomen CPH, conferences</span>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrapper">
+    <p>Cecilia Battinelli · Copenhagen</p>
+    <p><a href="index.html">← Back to main</a></p>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

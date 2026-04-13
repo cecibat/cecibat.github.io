@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cecilia Battinelli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0b0b0f;
+      --bg-surface: #111118;
+      --bg-card: #13131c;
+      --border: rgba(160, 130, 255, 0.12);
+      --border-hover: rgba(160, 130, 255, 0.3);
+      --purple: #a78bfa;
+      --purple-dim: #7c5dc7;
+      --purple-glow: rgba(167, 139, 250, 0.15);
+      --text: #e8e4f0;
+      --text-secondary: #9490a8;
+      --text-tertiary: #5a5668;
+      --mono: 'DM Mono', monospace;
+      --serif: 'Instrument Serif', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(160,130,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(160,130,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Purple ambient glow top-right */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -200px;
+      right: -200px;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(124, 93, 199, 0.18) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(11,11,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    nav .wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .nav-logo {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--purple);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+    }
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--purple); }
+
+    /* HERO */
+    .hero {
+      padding: 140px 0 100px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-eyebrow {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--purple);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.1s;
+    }
+    .hero-name {
+      font-family: var(--serif);
+      font-size: clamp(44px, 7vw, 80px);
+      font-weight: 400;
+      line-height: 1.05;
+      color: var(--text);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.2s;
+    }
+    .hero-name em {
+      font-style: italic;
+      color: var(--purple);
+    }
+    .hero-tagline {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.35s;
+    }
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.45s;
+    }
+    .hero-meta-item {
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .hero-meta-item span {
+      color: var(--text-secondary);
+    }
+
+    /* AWARDS STRIP */
+    .awards-strip {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--border);
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.55s;
+    }
+    .award-badge {
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      color: var(--purple);
+      border: 1px solid var(--border-hover);
+      border-radius: 2px;
+      padding: 4px 10px;
+      background: var(--purple-glow);
+      white-space: nowrap;
+    }
+
+    /* SECTIONS */
+    section {
+      padding: 72px 0;
+      border-bottom: 1px solid var(--border);
+    }
+    section:last-of-type { border-bottom: none; }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+    .section-number {
+      font-size: 11px;
+      color: var(--purple-dim);
+      letter-spacing: 0.1em;
+      min-width: 28px;
+    }
+    .section-title {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* EXPERIENCE */
+    .exp-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 0 2.5rem;
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .exp-item:first-of-type { border-top: none; }
+    .exp-date {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 0.06em;
+      padding-top: 4px;
+      line-height: 1.6;
+    }
+    .exp-role {
+      font-family: var(--serif);
+      font-size: 20px;
+      color: var(--text);
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+    .exp-company {
+      font-size: 12px;
+      color: var(--purple);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+    }
+    .exp-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      margin-bottom: 0.75rem;
+    }
+    .exp-highlights {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .exp-highlights li {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      padding-left: 1rem;
+      position: relative;
+    }
+    .exp-highlights li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--purple-dim);
+    }
+    .exp-highlights li strong {
+      color: var(--text-secondary);
+      font-weight: 400;
+    }
+    .exp-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+    .exp-tag {
+      font-size: 10px;
+      letter-spacing: 0.08em;
+      color: var(--text-tertiary);
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 2px 7px;
+    }
+
+    /* STATS ROW */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+    .stat-cell {
+      background: var(--bg-card);
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-number {
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 32px;
+      color: var(--purple);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+
+    /* EDUCATION */
+    .edu-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 0 2.5rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+    }
+    .edu-item:first-of-type { border-top: none; }
+    .edu-year { font-size: 11px; color: var(--text-tertiary); padding-top: 4px; }
+    .edu-degree {
+      font-family: var(--serif);
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .edu-school { font-size: 12px; color: var(--purple); letter-spacing: 0.04em; }
+
+    /* SPEAKING */
+    .talk-item {
+      display: flex;
+      gap: 1.5rem;
+      padding: 1.5rem 0;
+      border-top: 1px solid var(--border);
+      align-items: flex-start;
+    }
+    .talk-item:first-of-type { border-top: none; }
+    .talk-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+    .talk-title {
+      font-size: 14px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .talk-meta { font-size: 12px; color: var(--text-tertiary); }
+
+    /* CONTACT */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      text-decoration: none;
+      color: var(--text-secondary);
+      font-size: 13px;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .contact-link:hover {
+      border-color: var(--border-hover);
+      color: var(--purple);
+      background: var(--purple-glow);
+    }
+    .contact-link-icon {
+      font-size: 16px;
+      width: 20px;
+      text-align: center;
+      opacity: 0.7;
+    }
+
+    /* FOOTER */
+    footer {
+      padding: 2rem 0;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    footer p { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.06em; }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* MOBILE */
+    @media (max-width: 600px) {
+      .exp-item, .edu-item {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+      .nav-links { display: none; }
+      .hero { padding: 110px 0 64px; }
+      .stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="wrapper">
+    <a class="nav-logo" href="#">Cecilia Battinelli</a>
+    <ul class="nav-links">
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#speaking">Speaking</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main>
+  <div class="wrapper">
+
+    <!-- HERO -->
+    <section class="hero" id="about">
+      <div class="hero-eyebrow">Tech Lead · AI Learning Owner · Copenhagen</div>
+      <h1 class="hero-name">Cecilia<br><em>Battinelli</em></h1>
+      <p class="hero-tagline">
+        Applied mathematician turned software engineer, working at the intersection of fintech, AI strategy, and platform engineering. I help organizations build better software — and help people navigate the AI transition with clarity and confidence.
+      </p>
+      <div class="hero-meta">
+        <div class="hero-meta-item">Company <span>SimCorp</span></div>
+        <div class="hero-meta-item">Location <span>Copenhagen, DK</span></div>
+        <div class="hero-meta-item">Experience <span>7+ years</span></div>
+        <div class="hero-meta-item">Background <span>Fintech · Medtech</span></div>
+      </div>
+    </section>
+
+    <!-- AWARDS STRIP -->
+    <div class="awards-strip" id="awards">
+      <span class="award-badge">🏆 Developer of the Year 2024 — Nordic Women in Tech Awards</span>
+      <span class="award-badge">🎓 Excellent Master Thesis — Stockholm Mathematics Center</span>
+      <span class="award-badge">📄 Patents (1 granted, 1 pending)</span>
+      <span class="award-badge">📝 3+ peer-reviewed publications</span>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="section-header reveal">
+        <span class="section-number">01</span>
+        <span class="section-title">Experience</span>
+      </div>
+
+      <div class="stats-row reveal">
+        <div class="stat-cell">
+          <div class="stat-number">700+</div>
+          <div class="stat-label">people in AI Hackathon</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">30%</div>
+          <div class="stat-label">efficiency gain via AI/ML</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">50%</div>
+          <div class="stat-label">fewer defects in 6 months</div>
+        </div>
+        <div class="stat-cell">
+          <div class="stat-number">50%</div>
+          <div class="stat-label">faster root cause analysis</div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-date">2026 – Present<br>Copenhagen</div>
+        <div>
+          <div class="exp-role">AI Learning Owner</div>
+          <div class="exp-company">SimCorp</div>
+          <div class="exp-desc">Contributing to SimCorp's AI learning strategy across a 700-person product division. Running workshops, prototyping AI solutions, and shaping the company's upskilling roadmap in close collaboration with CPO and Directors of AI.</div>
+          <ul class="exp-highlights">
+            <li>Led company-wide <strong>AI Hackathon with Microsoft</strong> — 80% participation across multiple locations</li>
+            <li>Hands-on <strong>GitHub Copilot</strong> sessions that drove 50%+ license growth</li>
+            <li>Built an AI learning agent that reduced root cause analysis time by <strong>50%</strong></li>
+            <li>Panel discussions with C-level board on AI strategy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-date">2022 – Present<br>Copenhagen</div>
+        <div>
+          <div class="exp-role">Lead Software Engineer (Tech Lead)</div>
+          <div class="exp-company">SimCorp</div>
+          <div class="exp-desc">Technical lead for financial instrument pricing features and cross-team CI/CD processes in a 45+ person department. Equal parts engineering depth and people leadership.</div>
+          <ul class="exp-highlights">
+            <li>Designed and implemented <strong>novel pricing algorithms</strong> via external library API integration</li>
+            <li>Led CI/CD process across scrum teams, ensuring on-time delivery</li>
+            <li>Technical ambassador for <strong>20+ engineers</strong> on Git practices</li>
+            <li>Guided QA to a <strong>50% reduction in issued defects</strong> over 6 months</li>
+          </ul>
+          <div class="exp-tags">
+            <span class="exp-tag">C++</span>
+            <span class="exp-tag">C#</span>
+            <span class="exp-tag">Python</span>
+            <span class="exp-tag">Agility</span>
+            <span class="exp-tag">Miro</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-date">2020 – 2021<br>Stockholm</div>
+        <div>
+          <div class="exp-role">Product Owner</div>
+          <div class="exp-company">RaySearch Laboratories</div>
+          <div class="exp-desc">Managed a scrum team of 6 developing novel mathematical optimization algorithms for proton therapy. Bridged clinical, regulatory, and engineering requirements through to a successful product release.</div>
+          <ul class="exp-highlights">
+            <li>Led the product journey that delivered <strong>proton arc therapy</strong> to clinical release in 2024</li>
+            <li>Aligned stakeholders across clinical, regulatory, and dev teams</li>
+          </ul>
+          <div class="exp-tags">
+            <span class="exp-tag">Azure DevOps</span>
+            <span class="exp-tag">Scrum</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="exp-item reveal">
+        <div class="exp-date">2019 – 2021<br>Stockholm</div>
+        <div>
+          <div class="exp-role">Research Engineer</div>
+          <div class="exp-company">RaySearch Laboratories</div>
+          <div class="exp-desc">Created mathematical optimization algorithms improving radiation therapy outcomes. Presented research internationally and mentored junior engineers and master thesis students.</div>
+          <ul class="exp-highlights">
+            <li>Inventor of <strong>1 granted and 1 pending patent</strong></li>
+            <li>Author of <strong>3+ research publications</strong> and conference abstracts</li>
+            <li>Presented at ASTRO, ESTRO, PTCOG</li>
+            <li>Mentored 3 junior employees and thesis students</li>
+          </ul>
+          <div class="exp-tags">
+            <span class="exp-tag">C++</span>
+            <span class="exp-tag">C#</span>
+            <span class="exp-tag">Python</span>
+            <span class="exp-tag">WPF</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPEAKING -->
+    <section id="speaking">
+      <div class="section-header reveal">
+        <span class="section-number">02</span>
+        <span class="section-title">Speaking & Community</span>
+      </div>
+
+      <div class="talk-item reveal">
+        <div class="talk-dot"></div>
+        <div>
+          <div class="talk-title">AI Augmented Careers: Figuring It Out</div>
+          <div class="talk-meta">Panelist · TechWomen Copenhagen at Matrikel1 · March 2025</div>
+        </div>
+      </div>
+      <div class="talk-item reveal">
+        <div class="talk-dot"></div>
+        <div>
+          <div class="talk-title">C-Level AI Strategy Panel</div>
+          <div class="talk-meta">Panelist · SimCorp Internal Board · 2025</div>
+        </div>
+      </div>
+      <div class="talk-item reveal">
+        <div class="talk-dot"></div>
+        <div>
+          <div class="talk-title">Empowering women through the AI transition</div>
+          <div class="talk-meta">Mentoring & community work · Ongoing</div>
+        </div>
+      </div>
+      <div class="talk-item reveal">
+        <div class="talk-dot"></div>
+        <div>
+          <div class="talk-title">Research conferences: ASTRO, ESTRO, PTCOG</div>
+          <div class="talk-meta">Speaker · Mathematical optimization in radiation therapy · 2019–2021</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EDUCATION -->
+    <section id="education">
+      <div class="section-header reveal">
+        <span class="section-number">03</span>
+        <span class="section-title">Education</span>
+      </div>
+
+      <div class="edu-item reveal">
+        <div class="edu-year">2017 – 2019</div>
+        <div>
+          <div class="edu-degree">MSc Applied & Computational Mathematics</div>
+          <div class="edu-school">KTH Royal Institute of Technology, Stockholm · Optimisation & System Theory</div>
+        </div>
+      </div>
+      <div class="edu-item reveal">
+        <div class="edu-year">2014 – 2017</div>
+        <div>
+          <div class="edu-degree">BSc Industrial & Management Engineering</div>
+          <div class="edu-school">Sapienza Università di Roma</div>
+        </div>
+      </div>
+      <div class="edu-item reveal">
+        <div class="edu-year">Certification</div>
+        <div>
+          <div class="edu-degree">Certified Scrum Master</div>
+          <div class="edu-school">Scrum Alliance · ID 001215121</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="section-header reveal">
+        <span class="section-number">04</span>
+        <span class="section-title">Get in touch</span>
+      </div>
+      <div class="contact-grid reveal">
+        <a class="contact-link" href="https://linkedin.com/in/cecilia-battinelli-b65105120/" target="_blank" rel="noopener">
+          <span class="contact-link-icon">in</span>
+          LinkedIn
+        </a>
+        <a class="contact-link" href="https://github.com/cecibat" target="_blank" rel="noopener">
+          <span class="contact-link-icon">⌥</span>
+          GitHub
+        </a>
+        <a class="contact-link" href="mailto:cecilia.battinelli@gmail.com">
+          <span class="contact-link-icon">@</span>
+          cecilia.battinelli@gmail.com
+        </a>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrapper" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:0.5rem;">
+    <p>Cecilia Battinelli · Copenhagen</p>
+    <p>cecibat.github.io</p>
+  </div>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
