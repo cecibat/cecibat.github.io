@@ -165,6 +165,47 @@
       color: var(--text-secondary);
     }
 
+    /* CTA BUTTON */
+    .hero-cta {
+      margin-top: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards 0.55s;
+    }
+    .cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 24px;
+      background: var(--purple-glow);
+      border: 1px solid var(--border-hover);
+      border-radius: 2px;
+      color: var(--purple);
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s, color 0.2s;
+    }
+    .cta-btn:hover {
+      background: rgba(167, 139, 250, 0.25);
+      border-color: var(--purple);
+      color: #fff;
+    }
+    .cta-btn-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--purple);
+      flex-shrink: 0;
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
     /* AWARDS STRIP */
     .awards-strip {
       display: flex;
@@ -458,6 +499,12 @@
         <div class="hero-meta-item">Location <span>Copenhagen, DK</span></div>
         <div class="hero-meta-item">Experience <span>7+ years</span></div>
         <div class="hero-meta-item">Background <span>Fintech · Medtech</span></div>
+      </div>
+      <div class="hero-cta">
+        <a class="cta-btn" href="https://calendar.app.google/FfLGndtsc7vuV6Bx6" target="_blank" rel="noopener">
+          <span class="cta-btn-dot"></span>
+          Book a 30-min discovery call
+        </a>
       </div>
     </section>
 
