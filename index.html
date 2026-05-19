@@ -1,545 +1,608 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cecilia Battinelli</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Cecilia Battinelli</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    :root {
-      --bg: #0b0b0f;
-      --bg-surface: #111118;
-      --bg-card: #13131c;
-      --border: rgba(160, 130, 255, 0.12);
-      --border-hover: rgba(160, 130, 255, 0.3);
-      --purple: #a78bfa;
-      --purple-dim: #7c5dc7;
-      --purple-glow: rgba(167, 139, 250, 0.15);
-      --text: #e8e4f0;
-      --text-secondary: #9490a8;
-      --text-tertiary: #5a5668;
-      --mono: 'DM Mono', monospace;
-      --serif: 'Instrument Serif', serif;
-    }
+:root {
+  --bg:           #13132a;
+  --bg-surface:   #1a1a32;
+  --bg-card:      #1e1e38;
+  --bg-card-hover:#232340;
+  --border:       rgba(160, 130, 255, 0.13);
+  --border-hover: rgba(160, 130, 255, 0.35);
+  --purple:       #a78bfa;
+  --purple-dim:   #7c5dc7;
+  --purple-glow:  rgba(167, 139, 250, 0.09);
+  --text:         #edeaf8;
+  --text-2:       #9d99b8;
+  --text-3:       #5c5878;
+  --mono:         'DM Mono', monospace;
+  --serif:        'Instrument Serif', serif;
+  --nav-h:        60px;
+}
 
-    html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--mono);
-      font-size: 14px;
-      font-weight: 300;
-      line-height: 1.7;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.75;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-    /* Subtle grid background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(160,130,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(160,130,255,0.025) 1px, transparent 1px);
-      background-size: 48px 48px;
-      pointer-events: none;
-      z-index: 0;
-    }
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(160,130,255,0.055) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
 
-    /* Purple ambient glow top-right */
-    body::after {
-      content: '';
-      position: fixed;
-      top: -200px;
-      right: -200px;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(124, 93, 199, 0.18) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: 0;
-    }
+.wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2.5rem;
+}
 
-    .wrapper {
-      position: relative;
-      z-index: 1;
-      max-width: 860px;
-      margin: 0 auto;
-      padding: 0 2rem;
-    }
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: var(--nav-h);
+  background: rgba(19,19,42,0.93);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
 
-    /* NAV */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      background: rgba(11,11,15,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-    nav .wrapper {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
-    }
-    .nav-logo {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 18px;
-      color: var(--purple);
-      text-decoration: none;
-      letter-spacing: 0.01em;
-    }
-    .nav-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-    .nav-links a {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      transition: color 0.2s;
-    }
-    .nav-links a:hover { color: var(--purple); }
+nav .wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  gap: 2rem;
+}
 
-    /* HERO */
-    .hero {
-      padding: 140px 0 100px;
-      border-bottom: 1px solid var(--border);
-    }
-    .hero-eyebrow {
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--purple);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.1s;
-    }
-    .hero-name {
-      font-family: var(--serif);
-      font-size: clamp(44px, 7vw, 80px);
-      font-weight: 400;
-      line-height: 1.05;
-      color: var(--text);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.2s;
-    }
-    .hero-name em {
-      font-style: italic;
-      color: var(--purple);
-    }
-    .hero-tagline {
-      font-size: 15px;
-      color: var(--text-secondary);
-      max-width: 560px;
-      line-height: 1.8;
-      margin-bottom: 2.5rem;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.35s;
-    }
-    .hero-meta {
-      display: flex;
-      gap: 2rem;
-      flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.45s;
-    }
-    .hero-meta-item {
-      font-size: 11px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
-    .hero-meta-item span {
-      color: var(--text-secondary);
-    }
+.nav-logo {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 17px;
+  color: var(--purple);
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 
-    /* CTA BUTTON */
-    .hero-cta {
-      margin-top: 2.5rem;
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.55s;
-    }
-    .cta-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 24px;
-      background: var(--purple-glow);
-      border: 1px solid var(--border-hover);
-      border-radius: 2px;
-      color: var(--purple);
-      font-family: var(--mono);
-      font-size: 12px;
-      font-weight: 400;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background 0.2s, border-color 0.2s, color 0.2s;
-    }
-    .cta-btn:hover {
-      background: rgba(167, 139, 250, 0.25);
-      border-color: var(--purple);
-      color: #fff;
-    }
-    .cta-btn-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--purple);
-      flex-shrink: 0;
-      animation: pulse 2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
+.nav-links {
+  display: flex;
+  gap: 1.75rem;
+  list-style: none;
+  flex: 1;
+  justify-content: center;
+}
 
-    /* AWARDS STRIP */
-    .awards-strip {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      padding: 1.5rem 0;
-      border-bottom: 1px solid var(--border);
-      opacity: 0;
-      animation: fadeUp 0.7s ease forwards 0.55s;
-    }
-    .award-badge {
-      font-size: 11px;
-      letter-spacing: 0.06em;
-      color: var(--purple);
-      border: 1px solid var(--border-hover);
-      border-radius: 2px;
-      padding: 4px 10px;
-      background: var(--purple-glow);
-      white-space: nowrap;
-    }
+.nav-links a {
+  color: var(--text-3);
+  text-decoration: none;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  white-space: nowrap;
+}
 
-    /* SECTIONS */
-    section {
-      padding: 72px 0;
-      border-bottom: 1px solid var(--border);
-    }
-    section:last-of-type { border-bottom: none; }
+.nav-links a:hover { color: var(--purple); }
 
-    .section-header {
-      display: flex;
-      align-items: baseline;
-      gap: 1rem;
-      margin-bottom: 3rem;
-    }
-    .section-number {
-      font-size: 11px;
-      color: var(--purple-dim);
-      letter-spacing: 0.1em;
-      min-width: 28px;
-    }
-    .section-title {
-      font-size: 11px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: 1px solid var(--border-hover);
+  border-radius: 2px;
+  color: var(--purple);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s, color 0.2s;
+}
 
-    /* EXPERIENCE */
-    .exp-item {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 0 2.5rem;
-      padding: 2rem 0;
-      border-top: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-    .exp-item:first-of-type { border-top: none; }
-    .exp-date {
-      font-size: 11px;
-      color: var(--text-tertiary);
-      letter-spacing: 0.06em;
-      padding-top: 4px;
-      line-height: 1.6;
-    }
-    .exp-role {
-      font-family: var(--serif);
-      font-size: 20px;
-      color: var(--text);
-      margin-bottom: 4px;
-      line-height: 1.2;
-    }
-    .exp-company {
-      font-size: 12px;
-      color: var(--purple);
-      letter-spacing: 0.06em;
-      margin-bottom: 0.75rem;
-    }
-    .exp-desc {
-      font-size: 13px;
-      color: var(--text-secondary);
-      line-height: 1.75;
-      margin-bottom: 0.75rem;
-    }
-    .exp-highlights {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-    .exp-highlights li {
-      font-size: 12px;
-      color: var(--text-tertiary);
-      padding-left: 1rem;
-      position: relative;
-    }
-    .exp-highlights li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: var(--purple-dim);
-    }
-    .exp-highlights li strong {
-      color: var(--text-secondary);
-      font-weight: 400;
-    }
-    .exp-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 0.75rem;
-    }
-    .exp-tag {
-      font-size: 10px;
-      letter-spacing: 0.08em;
-      color: var(--text-tertiary);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 2px 7px;
-    }
+.nav-cta:hover { background: var(--purple-glow); color: #fff; }
 
-    /* STATS ROW */
-    .stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 1px;
-      background: var(--border);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 3rem;
-    }
-    .stat-cell {
-      background: var(--bg-card);
-      padding: 1.5rem;
-      text-align: center;
-    }
-    .stat-number {
-      font-family: var(--serif);
-      font-style: italic;
-      font-size: 32px;
-      color: var(--purple);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .stat-label {
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
+.nav-cta-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--purple);
+  animation: pulse 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
 
-    /* EDUCATION */
-    .edu-item {
-      display: grid;
-      grid-template-columns: 160px 1fr;
-      gap: 0 2.5rem;
-      padding: 1.5rem 0;
-      border-top: 1px solid var(--border);
-    }
-    .edu-item:first-of-type { border-top: none; }
-    .edu-year { font-size: 11px; color: var(--text-tertiary); padding-top: 4px; }
-    .edu-degree {
-      font-family: var(--serif);
-      font-size: 18px;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .edu-school { font-size: 12px; color: var(--purple); letter-spacing: 0.04em; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.3; }
+}
 
-    /* SPEAKING */
-    .talk-item {
-      display: flex;
-      gap: 1.5rem;
-      padding: 1.5rem 0;
-      border-top: 1px solid var(--border);
-      align-items: flex-start;
-    }
-    .talk-item:first-of-type { border-top: none; }
-    .talk-dot {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: var(--purple);
-      flex-shrink: 0;
-      margin-top: 8px;
-    }
-    .talk-title {
-      font-size: 14px;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-    .talk-meta { font-size: 12px; color: var(--text-tertiary); }
+/* HERO / ABOUT */
+#about {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--nav-h);
+  border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+}
 
-    /* CONTACT */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    .contact-link {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      padding: 1.25rem;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 4px;
-      text-decoration: none;
-      color: var(--text-secondary);
-      font-size: 13px;
-      transition: border-color 0.2s, color 0.2s, background 0.2s;
-    }
-    .contact-link:hover {
-      border-color: var(--border-hover);
-      color: var(--purple);
-      background: var(--purple-glow);
-    }
-    .contact-link-icon {
-      font-size: 16px;
-      width: 20px;
-      text-align: center;
-      opacity: 0.7;
-    }
+#about::after {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  box-shadow:
+    0 0 0 1px rgba(160,130,255,0.06),
+    0 0 0 40px rgba(160,130,255,0.04),
+    0 0 0 80px rgba(160,130,255,0.03),
+    0 0 0 130px rgba(160,130,255,0.02),
+    0 0 0 190px rgba(160,130,255,0.015);
+  pointer-events: none;
+}
 
-    /* FOOTER */
-    footer {
-      padding: 2rem 0;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-    footer p { font-size: 11px; color: var(--text-tertiary); letter-spacing: 0.06em; }
+.hero-inner {
+  padding: 80px 0 80px;
+  max-width: 620px;
+}
 
-    /* ANIMATIONS */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+.hero-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 1.4rem;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.1s;
+}
 
-    .reveal {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+.hero-name {
+  font-family: var(--serif);
+  font-size: clamp(52px, 8vw, 88px);
+  font-weight: 400;
+  line-height: 1.0;
+  color: var(--text);
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.2s;
+}
 
-    /* MOBILE */
-    @media (max-width: 600px) {
-      .exp-item, .edu-item {
-        grid-template-columns: 1fr;
-        gap: 0.5rem;
-      }
-      .nav-links { display: none; }
-      .hero { padding: 110px 0 64px; }
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-    }
-  </style>
+.hero-name em {
+  display: block;
+  font-style: italic;
+  color: var(--purple);
+}
+
+.hero-bio {
+  font-size: 14px;
+  line-height: 1.9;
+  color: var(--text-2);
+  text-align: justify;
+  margin-bottom: 2rem;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.32s;
+}
+
+.hero-credentials {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.42s;
+}
+
+.credential {
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--text-3);
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.credential::before {
+  content: '—';
+  color: var(--purple-dim);
+  flex-shrink: 0;
+}
+
+.credential strong { color: var(--text-2); font-weight: 400; }
+
+/* AT A GLANCE */
+.glance-section {
+  padding: 64px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.glance-label {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  margin-bottom: 1.5rem;
+}
+
+.glance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.glance-card {
+  background: var(--bg-card);
+  padding: 1.6rem 1.75rem;
+  transition: background 0.2s;
+}
+
+.glance-card:hover { background: var(--bg-card-hover); }
+
+.glance-icon { font-size: 17px; margin-bottom: 0.5rem; line-height: 1; }
+
+.glance-card-label {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 0.85rem;
+}
+
+.glance-items { display: flex; flex-direction: column; gap: 5px; }
+
+.glance-item {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.55;
+  padding-left: 1.1rem;
+  position: relative;
+}
+
+.glance-item::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--purple-dim);
+  font-size: 11px;
+  top: 1px;
+}
+
+/* SECTION SHARED */
+.page-section {
+  padding: 72px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 2.75rem;
+}
+
+.section-num {
+  font-size: 10px;
+  color: var(--purple-dim);
+  letter-spacing: 0.1em;
+  min-width: 24px;
+}
+
+.section-title {
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+/* EXPERIENCE */
+.exp-item {
+  display: grid;
+  grid-template-columns: 155px 1fr;
+  gap: 0 2.5rem;
+  padding: 1.75rem 0;
+  border-top: 1px solid var(--border);
+}
+
+.exp-item:first-of-type { border-top: none; }
+
+.exp-date {
+  font-size: 11px;
+  color: var(--text-3);
+  letter-spacing: 0.05em;
+  padding-top: 3px;
+  line-height: 1.65;
+}
+
+.exp-role {
+  font-family: var(--serif);
+  font-size: 19px;
+  color: var(--text);
+  margin-bottom: 2px;
+  line-height: 1.2;
+}
+
+.exp-company {
+  font-size: 11px;
+  color: var(--purple);
+  letter-spacing: 0.07em;
+  margin-bottom: 0.7rem;
+}
+
+.exp-desc {
+  font-size: 13px;
+  color: var(--text-2);
+  line-height: 1.8;
+  margin-bottom: 0.65rem;
+}
+
+.exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+
+.exp-bullets li {
+  font-size: 12px;
+  color: var(--text-3);
+  padding-left: 1rem;
+  position: relative;
+  line-height: 1.6;
+}
+
+.exp-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--purple-dim); }
+.exp-bullets li strong { color: var(--text-2); font-weight: 400; }
+
+.exp-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 0.7rem; }
+
+.exp-tag {
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  padding: 2px 7px;
+}
+
+/* IMPACT */
+.impact-item {
+  display: grid;
+  grid-template-columns: 155px 1fr;
+  gap: 0 2.5rem;
+  padding: 1.4rem 0;
+  border-top: 1px solid var(--border);
+  align-items: start;
+}
+
+.impact-item:first-of-type { border-top: none; }
+
+.impact-type {
+  font-size: 10px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--purple-dim);
+  padding-top: 3px;
+}
+
+.impact-title { font-size: 14px; color: var(--text); margin-bottom: 3px; line-height: 1.4; }
+.impact-meta { font-size: 12px; color: var(--text-3); }
+
+/* SKILLS */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.skill-cell { background: var(--bg-card); padding: 1.25rem 1.5rem; }
+
+.skill-cell-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--purple);
+  margin-bottom: 0.6rem;
+}
+
+.skill-list { font-size: 12px; color: var(--text-2); line-height: 1.9; }
+
+.skills-link {
+  font-size: 12px;
+  color: var(--text-3);
+  text-decoration: none;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 2px;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.skills-link:hover { color: var(--purple); border-color: var(--purple); }
+
+/* CONTACT */
+.contact-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  text-decoration: none;
+  color: var(--text-2);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.contact-link:hover {
+  border-color: var(--border-hover);
+  color: var(--purple);
+  background: var(--purple-glow);
+}
+
+/* FOOTER */
+footer { padding: 1.75rem 0; border-top: 1px solid var(--border); }
+
+footer .wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+footer p { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+}
+
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* MOBILE */
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .exp-item, .impact-item { grid-template-columns: 1fr; gap: 0.4rem; }
+  .glance-grid { grid-template-columns: 1fr; }
+  .hero-name { font-size: 52px; }
+  #about::after { display: none; }
+}
+</style>
 </head>
 <body>
 
 <nav>
   <div class="wrapper">
-    <a class="nav-logo" href="#">Cecilia Battinelli</a>
+    <a class="nav-logo" href="#about">Cecilia Battinelli</a>
     <ul class="nav-links">
+      <li><a href="#about">About</a></li>
       <li><a href="#experience">Experience</a></li>
-      <li><a href="#speaking">Speaking</a></li>
-      <li><a href="#education">Education</a></li>
-      <li><a href="skills.html">Skills</a></li>
+      <li><a href="#impact">Impact</a></li>
+      <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
+    <a class="nav-cta" href="https://calendar.app.google/FfLGndtsc7vuV6Bx6" target="_blank" rel="noopener">
+      <span class="nav-cta-dot"></span>
+      Book a call
+    </a>
   </div>
 </nav>
 
 <main>
   <div class="wrapper">
 
-    <!-- HERO -->
-    <section class="hero" id="about">
-      <div class="hero-eyebrow">Tech Lead · AI Learning Owner · Copenhagen</div>
-      <h1 class="hero-name">Cecilia<br><em>Battinelli</em></h1>
-      <p class="hero-tagline">
-        Applied mathematician turned software engineer, working at the intersection of fintech, AI strategy, and platform engineering. I help organizations build better software — and help people navigate the AI transition with clarity and confidence.
-      </p>
-      <div class="hero-meta">
-        <div class="hero-meta-item">Company <span>SimCorp</span></div>
-        <div class="hero-meta-item">Location <span>Copenhagen, DK</span></div>
-        <div class="hero-meta-item">Experience <span>7+ years</span></div>
-        <div class="hero-meta-item">Background <span>Fintech · Medtech</span></div>
-      </div>
-      <div class="hero-cta">
-        <a class="cta-btn" href="https://calendar.app.google/FfLGndtsc7vuV6Bx6" target="_blank" rel="noopener">
-          <span class="cta-btn-dot"></span>
-          Book a 30-min discovery call
-        </a>
+    <!-- ABOUT / HERO -->
+    <section id="about">
+      <div class="hero-inner">
+        <div class="hero-eyebrow">Tech Lead · AI Learning Owner · Copenhagen</div>
+        <h1 class="hero-name">
+          Cecilia
+          <em>Battinelli</em>
+        </h1>
+        <p class="hero-bio">
+          Seasoned tech leader with 6+ years in fintech and medtech, driving AI innovation in regulated industries to deliver measurable business impact. At SimCorp, I shape the company's AI journey by leading initiatives including a company-wide AI Hackathon with Microsoft (700+ people), while as Tech Lead I drive engineering excellence, pricing algorithm development, and cross-team delivery. Earlier in my career, my contributions in mathematical optimization for radiation therapy led to patents and scientific publications. I speak publicly on AI and career augmentation, advocate for women in tech through panels, masterclasses, and mentoring, and build practical, responsible solutions that translate technical potential into real business value.
+        </p>
+        <div class="hero-credentials">
+          <span class="credential"><strong>MSc Applied &amp; Computational Mathematics</strong> · KTH Royal Institute of Technology, Stockholm</span>
+          <span class="credential"><strong>BSc Industrial &amp; Management Engineering</strong> · Sapienza Università di Roma</span>
+          <span class="credential"><strong>Certified Scrum Master</strong> · Scrum Alliance</span>
+        </div>
       </div>
     </section>
 
-    <!-- AWARDS STRIP -->
-    <div class="awards-strip" id="awards">
-      <span class="award-badge">🏆 Developer of the Year 2024 — Nordic Women in Tech Awards</span>
-      <span class="award-badge">🎓 Excellent Master Thesis — Stockholm Mathematics Center</span>
-      <span class="award-badge">📄 Patents (1 granted, 1 pending)</span>
-      <span class="award-badge">📝 3+ peer-reviewed publications</span>
+    <!-- AT A GLANCE -->
+    <div class="glance-section reveal">
+      <div class="glance-label">At a glance</div>
+      <div class="glance-grid">
+
+        <div class="glance-card">
+          <div class="glance-icon">🏆</div>
+          <div class="glance-card-label">Recognition</div>
+          <div class="glance-items">
+            <div class="glance-item">Developer of the Year 2024 — Nordic Women in Tech Awards</div>
+            <div class="glance-item">Excellent Master Thesis — Stockholm Mathematics Centre</div>
+          </div>
+        </div>
+
+        <div class="glance-card">
+          <div class="glance-icon">🔬</div>
+          <div class="glance-card-label">Research &amp; IP</div>
+          <div class="glance-items">
+            <div class="glance-item">Inventor — 1 granted patent, 1 pending</div>
+            <div class="glance-item">Author — 3+ peer-reviewed publications in mathematical optimization</div>
+            <div class="glance-item">Presenter at ASTRO, ESTRO, PTCOG</div>
+          </div>
+        </div>
+
+        <div class="glance-card">
+          <div class="glance-icon">🤖</div>
+          <div class="glance-card-label">AI Leadership</div>
+          <div class="glance-items">
+            <div class="glance-item">Led company-wide AI Hackathon with Microsoft — 700+ participants, 80% engagement</div>
+            <div class="glance-item">AI/ML initiatives improved department efficiency by 30%</div>
+            <div class="glance-item">GitHub Copilot adoption sessions driving 50%+ licence growth</div>
+          </div>
+        </div>
+
+        <div class="glance-card">
+          <div class="glance-icon">👩‍💻</div>
+          <div class="glance-card-label">Women in Tech</div>
+          <div class="glance-items">
+            <div class="glance-item">Panelist — TechWomen Copenhagen at Matrikel1</div>
+            <div class="glance-item">Panelist — C-Level AI Strategy, SimCorp Board</div>
+            <div class="glance-item">Masterclasses and mentoring for women navigating the AI transition</div>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <!-- EXPERIENCE -->
-    <section id="experience">
+    <section class="page-section" id="experience">
       <div class="section-header reveal">
-        <span class="section-number">01</span>
+        <span class="section-num">01</span>
         <span class="section-title">Experience</span>
-      </div>
-
-      <div class="stats-row reveal">
-        <div class="stat-cell">
-          <div class="stat-number">700+</div>
-          <div class="stat-label">people in AI Hackathon</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-number">30%</div>
-          <div class="stat-label">efficiency gain via AI/ML</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-number">50%</div>
-          <div class="stat-label">fewer defects in 6 months</div>
-        </div>
-        <div class="stat-cell">
-          <div class="stat-number">50%</div>
-          <div class="stat-label">faster root cause analysis</div>
-        </div>
       </div>
 
       <div class="exp-item reveal">
@@ -547,11 +610,11 @@
         <div>
           <div class="exp-role">AI Learning Owner</div>
           <div class="exp-company">SimCorp</div>
-          <div class="exp-desc">Contributing to SimCorp's AI learning strategy across a 700-person product division. Running workshops, prototyping AI solutions, and shaping the company's upskilling roadmap in close collaboration with CPO and Directors of AI.</div>
-          <ul class="exp-highlights">
-            <li>Led company-wide <strong>AI Hackathon with Microsoft</strong> — 80% participation across multiple locations</li>
-            <li>Hands-on <strong>GitHub Copilot</strong> sessions that drove 50%+ license growth</li>
-            <li>Built an AI learning agent that reduced root cause analysis time by <strong>50%</strong></li>
+          <div class="exp-desc">Contributing to SimCorp's AI learning strategy across a 700-person product division. Running workshops, prototyping AI solutions, and shaping the upskilling roadmap in collaboration with CPO and Directors of AI.</div>
+          <ul class="exp-bullets">
+            <li>Led company-wide <strong>AI Hackathon with Microsoft</strong> — 80% participation across locations</li>
+            <li>Hands-on <strong>GitHub Copilot</strong> sessions driving 50%+ licence growth</li>
+            <li>Built an AI agent that reduced root cause analysis time by <strong>50%</strong></li>
             <li>Panel discussions with C-level board on AI strategy</li>
           </ul>
         </div>
@@ -562,10 +625,10 @@
         <div>
           <div class="exp-role">Lead Software Engineer (Tech Lead)</div>
           <div class="exp-company">SimCorp</div>
-          <div class="exp-desc">Technical lead for financial instrument pricing features and cross-team CI/CD processes in a 45+ person department. Equal parts engineering depth and people leadership.</div>
-          <ul class="exp-highlights">
+          <div class="exp-desc">Technical lead for financial instrument pricing features and cross-team CI/CD processes in a 45+ person department.</div>
+          <ul class="exp-bullets">
             <li>Designed and implemented <strong>novel pricing algorithms</strong> via external library API integration</li>
-            <li>Led CI/CD process across scrum teams, ensuring on-time delivery</li>
+            <li>Led CI/CD processes across scrum teams, ensuring on-time delivery</li>
             <li>Technical ambassador for <strong>20+ engineers</strong> on Git practices</li>
             <li>Guided QA to a <strong>50% reduction in issued defects</strong> over 6 months</li>
           </ul>
@@ -574,7 +637,6 @@
             <span class="exp-tag">C#</span>
             <span class="exp-tag">Python</span>
             <span class="exp-tag">Agility</span>
-            <span class="exp-tag">Miro</span>
           </div>
         </div>
       </div>
@@ -584,10 +646,10 @@
         <div>
           <div class="exp-role">Product Owner</div>
           <div class="exp-company">RaySearch Laboratories</div>
-          <div class="exp-desc">Managed a scrum team of 6 developing novel mathematical optimization algorithms for proton therapy. Bridged clinical, regulatory, and engineering requirements through to a successful product release.</div>
-          <ul class="exp-highlights">
-            <li>Led the product journey that delivered <strong>proton arc therapy</strong> to clinical release in 2024</li>
-            <li>Aligned stakeholders across clinical, regulatory, and dev teams</li>
+          <div class="exp-desc">Managed a scrum team of 6 developing novel mathematical optimization algorithms for proton therapy. Bridged clinical, regulatory, and engineering requirements through to product release.</div>
+          <ul class="exp-bullets">
+            <li>Led the product journey delivering <strong>proton arc therapy</strong> to clinical release</li>
+            <li>Aligned stakeholders across clinical, regulatory, and development teams</li>
           </ul>
           <div class="exp-tags">
             <span class="exp-tag">Azure DevOps</span>
@@ -601,10 +663,10 @@
         <div>
           <div class="exp-role">Research Engineer</div>
           <div class="exp-company">RaySearch Laboratories</div>
-          <div class="exp-desc">Created mathematical optimization algorithms improving radiation therapy outcomes. Presented research internationally and mentored junior engineers and master thesis students.</div>
-          <ul class="exp-highlights">
+          <div class="exp-desc">Created mathematical optimization algorithms improving radiation therapy outcomes. Presented research internationally and mentored junior engineers.</div>
+          <ul class="exp-bullets">
             <li>Inventor of <strong>1 granted and 1 pending patent</strong></li>
-            <li>Author of <strong>3+ research publications</strong> and conference abstracts</li>
+            <li>Author of <strong>3+ peer-reviewed publications</strong> and conference abstracts</li>
             <li>Presented at ASTRO, ESTRO, PTCOG</li>
             <li>Mentored 3 junior employees and thesis students</li>
           </ul>
@@ -612,97 +674,104 @@
             <span class="exp-tag">C++</span>
             <span class="exp-tag">C#</span>
             <span class="exp-tag">Python</span>
-            <span class="exp-tag">WPF</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- SPEAKING -->
-    <section id="speaking">
+    <!-- IMPACT -->
+    <section class="page-section" id="impact">
       <div class="section-header reveal">
-        <span class="section-number">02</span>
-        <span class="section-title">Speaking & Community</span>
+        <span class="section-num">02</span>
+        <span class="section-title">Impact</span>
       </div>
 
-      <div class="talk-item reveal">
-        <div class="talk-dot"></div>
+      <div class="impact-item reveal">
+        <div class="impact-type">Panel</div>
         <div>
-          <div class="talk-title">AI Augmented Careers: Figuring It Out</div>
-          <div class="talk-meta">Panelist · TechWomen Copenhagen at Matrikel1 · March 2025</div>
+          <div class="impact-title">AI Augmented Careers: Figuring It Out</div>
+          <div class="impact-meta">TechWomen Copenhagen at Matrikel1 · March 2025</div>
         </div>
       </div>
-      <div class="talk-item reveal">
-        <div class="talk-dot"></div>
+
+      <div class="impact-item reveal">
+        <div class="impact-type">Panel</div>
         <div>
-          <div class="talk-title">C-Level AI Strategy Panel</div>
-          <div class="talk-meta">Panelist · SimCorp Internal Board · 2025</div>
+          <div class="impact-title">C-Level AI Strategy Discussion</div>
+          <div class="impact-meta">SimCorp Internal Board · 2025</div>
         </div>
       </div>
-      <div class="talk-item reveal">
-        <div class="talk-dot"></div>
+
+      <div class="impact-item reveal">
+        <div class="impact-type">Masterclass</div>
         <div>
-          <div class="talk-title">Empowering women through the AI transition</div>
-          <div class="talk-meta">Mentoring & community work · Ongoing</div>
+          <div class="impact-title">Empowering Women Through the AI Transition</div>
+          <div class="impact-meta">Workshops, masterclasses &amp; mentoring · Ongoing</div>
         </div>
       </div>
-      <div class="talk-item reveal">
-        <div class="talk-dot"></div>
+
+      <div class="impact-item reveal">
+        <div class="impact-type">Community</div>
         <div>
-          <div class="talk-title">Research conferences: ASTRO, ESTRO, PTCOG</div>
-          <div class="talk-meta">Speaker · Mathematical optimization in radiation therapy · 2019–2021</div>
+          <div class="impact-title">AI Upskilling &amp; Hackathon Leadership at SimCorp</div>
+          <div class="impact-meta">Company-wide initiatives · 700+ people · 2024–2025</div>
+        </div>
+      </div>
+
+      <div class="impact-item reveal">
+        <div class="impact-type">Research</div>
+        <div>
+          <div class="impact-title">International Conference Presentations: ASTRO, ESTRO, PTCOG</div>
+          <div class="impact-meta">Mathematical optimization in radiation therapy · 2019–2021</div>
         </div>
       </div>
     </section>
 
-    <!-- EDUCATION -->
-    <section id="education">
+    <!-- SKILLS -->
+    <section class="page-section" id="skills">
       <div class="section-header reveal">
-        <span class="section-number">03</span>
-        <span class="section-title">Education</span>
+        <span class="section-num">03</span>
+        <span class="section-title">Skills</span>
       </div>
 
-      <div class="edu-item reveal">
-        <div class="edu-year">2017 – 2019</div>
-        <div>
-          <div class="edu-degree">MSc Applied & Computational Mathematics</div>
-          <div class="edu-school">KTH Royal Institute of Technology, Stockholm · Optimisation & System Theory</div>
+      <div class="skills-grid reveal">
+        <div class="skill-cell">
+          <div class="skill-cell-label">Engineering</div>
+          <div class="skill-list">C++ · C# · Python · Git<br>CI/CD · REST APIs · WPF</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">AI &amp; ML</div>
+          <div class="skill-list">LLM integration · GitHub Copilot<br>Prompt engineering · AI agents</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Leadership</div>
+          <div class="skill-list">Tech Lead · Product Owner<br>Agile · Scrum · Stakeholder mgmt</div>
+        </div>
+        <div class="skill-cell">
+          <div class="skill-cell-label">Mathematics</div>
+          <div class="skill-list">Optimisation · Numerical methods<br>Algorithm design · Applied maths</div>
         </div>
       </div>
-      <div class="edu-item reveal">
-        <div class="edu-year">2014 – 2017</div>
-        <div>
-          <div class="edu-degree">BSc Industrial & Management Engineering</div>
-          <div class="edu-school">Sapienza Università di Roma</div>
-        </div>
-      </div>
-      <div class="edu-item reveal">
-        <div class="edu-year">Certification</div>
-        <div>
-          <div class="edu-degree">Certified Scrum Master</div>
-          <div class="edu-school">Scrum Alliance · ID 001215121</div>
-        </div>
-      </div>
+
+      <a class="skills-link reveal" href="skills.html">View full skills breakdown →</a>
     </section>
 
     <!-- CONTACT -->
-    <section id="contact">
+    <section class="page-section" id="contact">
       <div class="section-header reveal">
-        <span class="section-number">04</span>
-        <span class="section-title">Get in touch</span>
+        <span class="section-num">04</span>
+        <span class="section-title">Contact</span>
       </div>
-      <div class="contact-grid reveal">
+
+      <div class="contact-row reveal">
         <a class="contact-link" href="https://linkedin.com/in/cecilia-battinelli-b65105120/" target="_blank" rel="noopener">
-          <span class="contact-link-icon">in</span>
-          LinkedIn
+          <span>in</span> LinkedIn
         </a>
         <a class="contact-link" href="https://github.com/cecibat" target="_blank" rel="noopener">
-          <span class="contact-link-icon">⌥</span>
-          GitHub
+          <span>⌥</span> GitHub
         </a>
         <a class="contact-link" href="mailto:cecilia.battinelli@gmail.com">
-          <span class="contact-link-icon">@</span>
-          cecilia.battinelli@gmail.com
+          <span>@</span> cecilia.battinelli@gmail.com
         </a>
       </div>
     </section>
@@ -711,23 +780,23 @@
 </main>
 
 <footer>
-  <div class="wrapper" style="display:flex;justify-content:space-between;width:100%;flex-wrap:wrap;gap:0.5rem;">
+  <div class="wrapper">
     <p>Cecilia Battinelli · Copenhagen</p>
     <p>cecibat.github.io</p>
   </div>
 </footer>
 
 <script>
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.1 });
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      observer.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.08 });
 
-  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 </script>
 
 </body>
