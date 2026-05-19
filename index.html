@@ -141,6 +141,62 @@ nav .wrapper {
   50%       { opacity: 0.3; }
 }
 
+/* Hamburger menu */
+.nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  flex-shrink: 0;
+}
+
+.nav-hamburger span {
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--purple);
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.nav-hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.nav-hamburger.open span:nth-child(2) { opacity: 0; }
+.nav-hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* Mobile drawer */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0;
+  background: rgba(19,19,42,0.98);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  z-index: 99;
+  padding: 1.5rem 2rem;
+  flex-direction: column;
+  gap: 0;
+}
+
+.mobile-menu.open { display: flex; }
+
+.mobile-menu a {
+  color: var(--text-2);
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--border);
+  transition: color 0.2s;
+}
+
+.mobile-menu a:last-child { border-bottom: none; }
+.mobile-menu a:hover { color: var(--purple); }
+
 /* HERO / ABOUT */
 #about {
   min-height: 100vh;
@@ -227,7 +283,7 @@ nav .wrapper {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  white-space: nowrap;   /* ← add this */
+  white-space: nowrap;
 }
 
 .credential::before {
@@ -501,13 +557,68 @@ footer p { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
 
 .reveal.visible { opacity: 1; transform: translateY(0); }
 
-/* MOBILE */
+/* ── MOBILE ─────────────────────────────────────────────── */
 @media (max-width: 640px) {
+
+  /* Nav */
   .nav-links { display: none; }
-  .exp-item, .impact-item { grid-template-columns: 1fr; gap: 0.4rem; }
+  .nav-hamburger { display: flex; }
+  .nav-cta { padding: 7px 12px; font-size: 10px; }
+
+  /* Wrapper */
+  .wrapper { padding: 0 1.25rem; }
+
+  /* Hero */
+  .hero-inner { padding: 48px 0 56px; }
+  .hero-name { font-size: 38px; }
+  .hero-bio { text-align: left; }
+
+  /* Credentials: allow wrapping on small screens */
+  .credential { white-space: normal; }
+
+  /* At a glance */
+  .glance-section { padding: 48px 0; }
   .glance-grid { grid-template-columns: 1fr; }
-  .hero-name { font-size: 52px; }
+
+  /* Sections */
+  .page-section { padding: 52px 0; }
+
+  /* Experience & Impact: stack date above content */
+  .exp-item {
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    padding: 1.4rem 0;
+  }
+
+  .exp-date {
+    display: flex;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  /* Replace the <br> visual gap with a separator */
+  .exp-date br { display: none; }
+
+  .impact-item {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 1.1rem 0;
+  }
+
+  /* Skills */
+  .skills-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Contact: break long email */
+  .contact-link { font-size: 11px; padding: 9px 14px; }
+  .contact-link[href^="mailto"] { word-break: break-all; }
+
+  /* Decorative circle */
   #about::after { display: none; }
+}
+
+@media (max-width: 400px) {
+  .skills-grid { grid-template-columns: 1fr; }
+  .hero-name { font-size: 34px; }
 }
 </style>
 </head>
@@ -527,8 +638,21 @@ footer p { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
       <span class="nav-cta-dot"></span>
       Book a call
     </a>
+    <button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- Mobile drawer -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#about"      onclick="closeMobileMenu()">About</a>
+  <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+  <a href="#impact"     onclick="closeMobileMenu()">Impact</a>
+  <a href="#skills"     onclick="closeMobileMenu()">Skills</a>
+  <a href="#contact"    onclick="closeMobileMenu()">Contact</a>
+  <a href="https://calendar.app.google/FfLGndtsc7vuV6Bx6" target="_blank" rel="noopener">Book a call →</a>
+</div>
 
 <main>
   <div class="wrapper">
@@ -788,6 +912,7 @@ footer p { font-size: 11px; color: var(--text-3); letter-spacing: 0.06em; }
 </footer>
 
 <script>
+// Scroll reveal
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(e => {
     if (e.isIntersecting) {
@@ -798,6 +923,31 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.08 });
 
 document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Hamburger menu
+const hamburger = document.querySelector('.nav-hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', () => {
+  const isOpen = mobileMenu.classList.toggle('open');
+  hamburger.classList.toggle('open', isOpen);
+  hamburger.setAttribute('aria-expanded', isOpen);
+});
+
+function closeMobileMenu() {
+  mobileMenu.classList.remove('open');
+  hamburger.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', false);
+}
+
+// Close menu on outside click
+document.addEventListener('click', (e) => {
+  if (!nav.contains(e.target) && !mobileMenu.contains(e.target)) {
+    closeMobileMenu();
+  }
+});
+
+const nav = document.querySelector('nav');
 </script>
 
 </body>
